@@ -1,0 +1,246 @@
+# Software Requirements Specification (SRS)
+## Gaza Cars Mobile Application
+
+**Version:** 1.0  
+**Date:** November 25, 2025  
+**Prepared for:** Client Review  
+
+---
+
+## 1. Introduction
+
+### 1.1 Purpose
+The purpose of this document is to provide a comprehensive description of the **Gaza Cars** mobile application. It details the functional and non-functional requirements, system architecture, user flows, and the roadmap for future development. This document serves as a guide for developers, stakeholders, and the client to understand the system's capabilities and intended behavior.
+
+### 1.2 Scope
+**Gaza Cars** is a Flutter-based mobile marketplace application designed specifically for the automotive market in Gaza. It connects car buyers with sellers (individuals and traders), facilitating the discovery, listing, and negotiation of vehicles. The system includes a robust Admin Dashboard for content moderation and user management.
+
+### 1.3 Definitions, Acronyms, and Abbreviations
+- **SRS**: Software Requirements Specification
+- **MVP**: Minimum Viable Product
+- **FCM**: Firebase Cloud Messaging
+- **Bloc**: Business Logic Component (State Management)
+- **UI/UX**: User Interface / User Experience
+- **Admin**: A user with elevated privileges to moderate content and users.
+- **Trader**: A professional seller with a business profile (Future feature).
+
+---
+
+## 2. Overall Description
+
+### 2.1 Product Perspective
+Gaza Cars is a standalone mobile application available on iOS (and planned for Android). It relies on **Firebase** for its backend infrastructure, utilizing:
+- **Firebase Authentication**: For secure user login and registration.
+- **Cloud Firestore**: As the NoSQL real-time database.
+- **Firebase Storage**: For hosting car images and user avatars.
+- **Firebase Cloud Messaging**: For push notifications.
+
+### 2.2 User Classes and Characteristics
+1.  **Guest User**: Can browse and search for cars but cannot view seller details or chat.
+2.  **Registered User (Buyer/Seller)**: Can list cars, view full details, add favorites, and chat with sellers.
+3.  **Admin**: Has full access to the Admin Dashboard to approve/reject listings, ban users, and view analytics.
+
+### 2.3 Operating Environment
+- **Client**: iOS 13.0+ (iPhone), Android 6.0+ (Future).
+- **Backend**: Serverless architecture via Google Firebase.
+
+---
+
+## 3. System Features (Functional Requirements)
+
+### 3.1 Authentication & User Management
+**Description**: Secure access control for the application.
+- **Login/Register**: Users can sign up using email/password.
+- **Profile Management**: Users can edit their name, phone number, and profile picture.
+- **Role Management**: System distinguishes between Users and Admins.
+
+### 3.2 Car Listing & Management
+**Description**: The core marketplace functionality.
+- **Add Car**: Users can list a car with details (Make, Model, Year, Price, Mileage, Condition, Location, Description) and upload multiple images.
+- **Image Compression**: Images are automatically optimized before upload to save data and storage.
+- **Edit/Delete**: Sellers can manage their own listings.
+- **Status Tracking**: Listings have statuses (Pending, Active, Rejected, Sold).
+
+### 3.3 Search & Discovery
+**Description**: Tools for buyers to find the right vehicle.
+- **Filtering**: Filter by Make, Year, Price Range, Location, and Condition.
+- **Search**: Keyword search for specific models.
+- **Favorites**: Users can save listings to a "Favorites" list for quick access.
+
+### 3.4 Real-time Communication
+**Description**: Integrated chat system for negotiations.
+- **In-App Chat**: Real-time messaging between buyers and sellers.
+- **Chat History**: Persistent chat history stored in Firestore.
+- **Entry Points**: Start chat directly from a car listing.
+
+### 3.5 Admin Dashboard
+**Description**: Tools for platform moderation and oversight.
+- **Analytics**: Visual charts showing User Growth, Car Status distribution, and Price trends.
+- **Car Moderation**: Review queue for "Pending" cars. Admins can Approve or Reject listings.
+- **User Management**: List all users, view details, and Ban/Unban users for violations.
+
+---
+
+## 4. System Diagrams
+
+### 4.1 System Architecture
+High-level overview of the technical stack.
+
+```mermaid
+graph TD
+    User[Mobile App (Flutter)]
+    Auth[Firebase Auth]
+    DB[Cloud Firestore]
+    Storage[Firebase Storage]
+    FCM[Firebase Cloud Messaging]
+    
+    User -->|Authenticates| Auth
+    User -->|Reads/Writes Data| DB
+    User -->|Uploads Images| Storage
+    FCM -->|Sends Notifications| User
+    
+    subgraph Backend Services
+        Auth
+        DB
+        Storage
+        FCM
+    end
+```
+
+### 4.2 User Flow: Add Car
+The process of listing a vehicle.
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant App
+    participant ImageHelper
+    participant Storage
+    participant DB
+    
+    User->>App: Click "Add Car"
+    App->>User: Show Form
+    User->>App: Fill Details & Pick Images
+    App->>ImageHelper: Compress Images
+    ImageHelper-->>App: Return Compressed Files
+    User->>App: Click "Save"
+    App->>Storage: Upload Images
+    Storage-->>App: Return Image URLs
+    App->>DB: Create Car Document (Status: Pending)
+    DB-->>App: Success
+    App-->>User: Show Success Message
+```
+
+### 4.3 Entity Relationship Diagram (ERD)
+Firestore NoSQL Schema structure.
+
+```mermaid
+erDiagram
+    USERS ||--o{ CARS : "lists"
+    USERS ||--o{ CHATS : "participates_in"
+    CARS ||--o{ FAVORITES : "is_favorited_by"
+    CHATS ||--o{ MESSAGES : "contains"
+
+    USERS {
+        string uid PK
+        string email
+        string name
+        string phone
+        string photoUrl
+        string role "user|admin"
+        boolean isBanned
+        timestamp createdAt
+    }
+
+    CARS {
+        string id PK
+        string sellerId FK
+        string make
+        string model
+        int year
+        double price
+        string status "pending|active|rejected|sold"
+        string[] images
+        timestamp createdAt
+    }
+
+    CHATS {
+        string id PK
+        string[] participants
+        string lastMessage
+        timestamp lastMessageTime
+        string carId FK
+    }
+
+    MESSAGES {
+        string id PK
+        string senderId FK
+        string content
+        timestamp timestamp
+        boolean isRead
+    }
+```
+
+---
+
+## 5. Future Roadmap (Detailed)
+
+### 5.1 Phase 2: Enhanced User Experience (1-2 Months)
+- **Push Notifications**:
+    - **Trigger**: New message received, Car approved/rejected, Price drop on favorite.
+    - **Tech**: Deep integration with FCM and local notification scheduling.
+- **Advanced Search**:
+    - **Saved Searches**: Users can save filter sets and get notified when matching cars are listed.
+    - **Compare Tool**: Side-by-side comparison of up to 3 vehicles.
+
+### 5.2 Phase 3: Monetization & Business Features (3-4 Months)
+- **Premium Listings**:
+    - **Feature**: Sellers pay to have their listing pinned to the top or highlighted.
+    - **Implementation**: Integration with Stripe/Apple Pay.
+- **Trader Accounts**:
+    - **Feature**: Verified business profiles for car dealerships.
+    - **Capabilities**: Bulk upload, analytics dashboard for views/leads.
+
+### 5.3 Phase 4: Platform Expansion (6+ Months)
+- **Web Portal**:
+    - **Feature**: A responsive web version of the app for desktop users.
+    - **Tech**: Flutter Web or Next.js connected to the same Firebase backend.
+- **AI Integration**:
+    - **Price Prediction**: AI model to suggest fair market price based on car details.
+    - **Image Recognition**: Auto-fill Make/Model/Year by analyzing uploaded photos.
+
+---
+
+## 6. Non-Functional Requirements
+
+### 6.1 Performance
+- **App Launch**: < 2 seconds.
+- **List Scrolling**: Smooth 60fps scrolling even with large image lists.
+- **Image Loading**: Optimized caching to prevent re-downloading.
+
+### 6.2 Security
+- **Data Privacy**: All user data is secured via Firestore Security Rules.
+- **Authentication**: No unauthenticated access to write operations.
+- **Input Validation**: All forms validate input to prevent injection or bad data.
+
+### 6.3 Reliability
+- **Offline Mode**: Basic app navigation works offline; data syncs when connection is restored (Future).
+- **Crash Free Rate**: Target > 99.5%.
+
+---
+
+## 7. Appendices
+
+### 7.1 Admin Moderation Flow
+How an admin manages listings.
+
+```mermaid
+stateDiagram-v2
+    [*] --> Pending
+    Pending --> Active: Admin Approves
+    Pending --> Rejected: Admin Rejects
+    Active --> Sold: Seller Marks Sold
+    Active --> Rejected: Admin Bans Listing
+    Rejected --> [*]
+    Sold --> [*]
+```

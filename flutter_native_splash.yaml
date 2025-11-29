@@ -1,0 +1,11 @@
+flutter_native_splash:
+  color: "#0D1B2A" # Deep Blue
+  image: "assets/splash/splash_screen.png"
+  color_dark: "#0D1B2A"
+  image_dark: "assets/splash/splash_screen.png"
+
+  android_12:
+    image: "assets/splash/splash_screen.png"
+    color: "#0D1B2A"
+  
+  web: false

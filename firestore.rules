@@ -1,0 +1,53 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isCarOwner(resource) {
+      return isAuthenticated() && resource.data.sellerId == request.auth.uid;
+    }
+
+    // Users collection
+    match /users/{userId} {
+      allow read: if isAuthenticated(); // Users can read other users (e.g. for chat info)
+      allow create: if isOwner(userId);
+      allow update: if isOwner(userId);
+      allow delete: if isOwner(userId);
+    }
+
+    // Cars collection
+    match /cars/{carId} {
+      allow read: if true; // Public read access
+      allow create: if isAuthenticated(); // Only authenticated users can list cars
+      allow update: if isCarOwner(resource); // Only the seller can update
+      allow delete: if isCarOwner(resource); // Only the seller can delete
+    }
+
+    // Chats collection
+    match /chats/{chatId} {
+      allow read: if isAuthenticated() && (
+        resource.data.participants[0] == request.auth.uid || 
+        resource.data.participants[1] == request.auth.uid
+      );
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated() && (
+        resource.data.participants[0] == request.auth.uid || 
+        resource.data.participants[1] == request.auth.uid
+      );
+      
+      // Messages subcollection
+      match /messages/{messageId} {
+        allow read: if isAuthenticated(); // Parent chat rules should cover this, but explicit is good
+        allow create: if isAuthenticated();
+      }
+    }
+  }
+}

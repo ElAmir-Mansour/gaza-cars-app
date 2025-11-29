@@ -1,0 +1,34 @@
+{
+    "firestore": {
+        "rules": "firestore.rules",
+        "indexes": "firestore.indexes.json"
+    },
+    "flutter": {
+        "platforms": {
+            "android": {
+                "default": {
+                    "projectId": "gaza-cars-project",
+                    "appId": "1:1019898214026:android:50e243b04851e7faeb9f73",
+                    "fileOutput": "android/app/google-services.json"
+                }
+            },
+            "ios": {
+                "default": {
+                    "projectId": "gaza-cars-project",
+                    "appId": "1:1019898214026:ios:1a1b1d84605f4caaeb9f73",
+                    "uploadDebugSymbols": false,
+                    "fileOutput": "ios/Runner/GoogleService-Info.plist"
+                }
+            },
+            "dart": {
+                "lib/firebase_options.dart": {
+                    "projectId": "gaza-cars-project",
+                    "configurations": {
+                        "android": "1:1019898214026:android:50e243b04851e7faeb9f73",
+                        "ios": "1:1019898214026:ios:1a1b1d84605f4caaeb9f73"
+                    }
+                }
+            }
+        }
+    }
+}

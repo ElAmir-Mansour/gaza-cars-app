@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gaza Cars - Software Requirements Specification</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            securityLevel: 'loose',
+        });
+    </script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1,
+        h2,
+        h3 {
+            color: #2c3e50;
+        }
+
+        h1 {
+            text-align: center;
+            border-bottom: 2px solid #2c3e50;
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .mermaid {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            overflow-x: auto;
+            text-align: center;
+        }
+
+        @media print {
+            body {
+                max-width: 100%;
+                padding: 0;
+            }
+
+            a {
+                text-decoration: none;
+                color: #000;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Software Requirements Specification (SRS)</h1>
+    <h2>Gaza Cars Mobile Application</h2>
+
+    <p><strong>Version:</strong> 2.0 (Expanded)<br>
+        <strong>Date:</strong> November 25, 2025<br>
+        <strong>Prepared for:</strong> Client Review
+    </p>
+
+    <hr>
+
+    <h2>1. Introduction</h2>
+
+    <h3>1.1 Purpose</h3>
+    <p>The purpose of this document is to provide a comprehensive, detailed description of the <strong>Gaza
+            Cars</strong> mobile application. It details the functional and non-functional requirements, system
+        architecture, extensive UML diagrams, and the roadmap for future development. This document serves as the
+        primary reference for the development team, stakeholders, and quality assurance.</p>
+
+    <h3>1.2 Scope</h3>
+    <p><strong>Gaza Cars</strong> is a specialized mobile marketplace for the automotive sector in Gaza. It connects
+        buyers and sellers through a secure, real-time platform. The system leverages <strong>Google Firebase</strong>
+        for a serverless, scalable backend.</p>
+
+    <h3>1.3 Definitions & Acronyms</h3>
+    <ul>
+        <li><strong>SRS</strong>: Software Requirements Specification</li>
+        <li><strong>Bloc</strong>: Business Logic Component (State Management Pattern)</li>
+        <li><strong>FCM</strong>: Firebase Cloud Messaging</li>
+        <li><strong>DI</strong>: Dependency Injection (using <code>get_it</code> and <code>injectable</code>)</li>
+        <li><strong>Clean Architecture</strong>: The software design philosophy used (Domain, Data, Presentation
+            layers).</li>
+    </ul>
+
+    <hr>
+
+    <h2>2. Overall Description</h2>
+
+    <h3>2.1 Product Perspective</h3>
+    <p>The application functions as a client-server system where the mobile app (Client) communicates directly with
+        Firebase (Serverless Backend).</p>
+
+    <h3>2.2 User Classes</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>User Class</th>
+                <th>Description</th>
+                <th>Access Level</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Guest</strong></td>
+                <td>Unregistered user.</td>
+                <td>Read-only access to public listings.</td>
+            </tr>
+            <tr>
+                <td><strong>User (Buyer)</strong></td>
+                <td>Registered individual.</td>
+                <td>Can chat, favorite cars, and view seller contact info.</td>
+            </tr>
+            <tr>
+                <td><strong>User (Seller)</strong></td>
+                <td>Registered individual.</td>
+                <td>Can list cars, manage listings, and chat with buyers.</td>
+            </tr>
+            <tr>
+                <td><strong>Admin</strong></td>
+                <td>Platform moderator.</td>
+                <td>Full access to dashboard, user management, and content moderation.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <hr>
+
+    <h2>3. System Diagrams (UML)</h2>
+
+    <h3>3.1 Use Case Diagram</h3>
+    <p>High-level view of actor interactions.</p>
+    <div class="mermaid">
+        graph LR
+        subgraph Actors
+        g((Guest))
+        u((Registered User))
+        a((Admin))
+        end
+
+        subgraph "Gaza Cars System"
+        UC1[View Listings]
+        UC2[Search & Filter]
+        UC3[Register/Login]
+        UC4[Manage Profile]
+        UC5[Add Car Listing]
+        UC6[Edit/Delete Listing]
+        UC7[Chat with Seller]
+        UC8[Manage Favorites]
+        UC9[Moderate Listings]
+        UC10[Ban Users]
+        UC11[View Analytics]
+        end
+
+        g --> UC1
+        g --> UC2
+        g --> UC3
+
+        u --> UC1
+        u --> UC2
+        u --> UC4
+        u --> UC5
+        u --> UC6
+        u --> UC7
+        u --> UC8
+
+        a --> UC1
+        a --> UC9
+        a --> UC10
+        a --> UC11
+    </div>
+
+    <h3>3.2 System Architecture (Component Diagram)</h3>
+    <p>Shows the modular structure of the application following Clean Architecture.</p>
+    <div class="mermaid">
+        graph TD
+        subgraph "Presentation Layer"
+        UI[Pages & Widgets]
+        Bloc[Blocs State Management]
+        end
+
+        subgraph "Domain Layer"
+        Entities[Entities]
+        UC[Use Cases]
+        RepoInt[Repository Interfaces]
+        end
+
+        subgraph "Data Layer"
+        RepoImpl[Repository Implementations]
+        RemoteDS[Remote Data Sources]
+        Models[Models JSON]
+        end
+
+        subgraph "External Services"
+        Auth[Firebase Auth]
+        DB[Cloud Firestore]
+        Storage[Firebase Storage]
+        end
+
+        UI --> Bloc
+        Bloc --> UC
+        UC --> RepoInt
+        RepoImpl -.->|Implements| RepoInt
+        RepoImpl --> RemoteDS
+        RemoteDS --> Models
+        RemoteDS --> Auth
+        RemoteDS --> DB
+        RemoteDS --> Storage
+    </div>
+
+    <h3>3.3 Deployment Diagram</h3>
+    <p>Physical deployment of artifacts.</p>
+    <div class="mermaid">
+        graph TD
+        subgraph "Client Device"
+        App[Flutter Mobile App]
+        LocalDB[Shared Preferences]
+        Camera[Camera / Gallery]
+        end
+
+        subgraph "Cloud Backend (Google Firebase)"
+        Auth[Authentication Service]
+        Firestore[Cloud Firestore NoSQL]
+        Storage[Cloud Storage Images]
+        end
+
+        App -->|HTTPS/TLS| Auth
+        App -->|HTTPS/TLS| Firestore
+        App -->|HTTPS/TLS| Storage
+        App -->|Local I/O| LocalDB
+        App -->|Local I/O| Camera
+    </div>
+
+    <h3>3.4 Sequence Diagram: User Login</h3>
+    <p>Detailed flow of the authentication process.</p>
+    <div class="mermaid">
+        sequenceDiagram
+        participant User
+        participant UI as Login Page
+        participant Bloc as AuthBloc
+        participant UC as LoginUseCase
+        participant Repo as AuthRepository
+        participant Firebase as FirebaseAuth
+
+        User->>UI: Enter Email & Password
+        User->>UI: Click "Login"
+        UI->>Bloc: Add(LoginEvent)
+        Bloc->>UC: call(params)
+        UC->>Repo: login(email, password)
+        Repo->>Firebase: signInWithEmailAndPassword()
+        alt Success
+        Firebase-->>Repo: UserCredential
+        Repo->>Repo: getUserData(uid)
+        Repo-->>UC: Right(UserEntity)
+        UC-->>Bloc: Right(UserEntity)
+        Bloc-->>UI: Emit(AuthAuthenticated)
+        UI-->>User: Navigate to Home
+        else Failure
+        Firebase-->>Repo: Error
+        Repo-->>UC: Left(Failure)
+        UC-->>Bloc: Left(Failure)
+        Bloc-->>UI: Emit(AuthError)
+        UI-->>User: Show Error Snackbar
+        end
+    </div>
+
+    <h3>3.5 Sequence Diagram: Sending a Message</h3>
+    <p>Real-time chat interaction flow.</p>
+    <div class="mermaid">
+        sequenceDiagram
+        participant Sender
+        participant ChatUI
+        participant ChatBloc
+        participant Firestore
+        participant Receiver
+
+        Sender->>ChatUI: Type Message & Send
+        ChatUI->>ChatBloc: Add(SendMessageEvent)
+        ChatBloc->>Firestore: add(MessageDocument)
+        Firestore-->>ChatBloc: Success
+
+        par Real-time Update
+        Firestore-->>ChatUI: Stream Update (New Message)
+        ChatUI-->>Sender: Show Message Bubble
+        and Notification
+        Firestore->>Receiver: Trigger Push Notification (Future)
+        end
+    </div>
+
+    <h3>3.6 Activity Diagram: Adding a Car</h3>
+    <p>Workflow for listing a vehicle.</p>
+    <div class="mermaid">
+        stateDiagram-v2
+        [*] --> FillDetails
+        FillDetails --> ValidateForm
+
+        state ValidateForm <<choice>>
+            ValidateForm --> Error : Invalid Data
+            ValidateForm --> PickImages : Valid Data
+
+            Error --> FillDetails : Fix Errors
+
+            PickImages --> CompressImages : Select from Gallery/Camera
+            CompressImages --> UploadImages : Compression Success
+
+            UploadImages --> SaveToFirestore : Get Download URLs
+            SaveToFirestore --> Success : Document Created
+
+            Success --> [*]
+    </div>
+
+    <h3>3.7 Class Diagram (Domain Entities)</h3>
+    <p>Core data structures.</p>
+    <div class="mermaid">
+        classDiagram
+        class UserEntity {
+        +String uid
+        +String email
+        +String name
+        +String phone
+        +String role
+        +bool isBanned
+        }
+
+        class CarEntity {
+        +String id
+        +String sellerId
+        +String make
+        +String model
+        +int year
+        +double price
+        +String condition
+        +String status
+        +List~String~ images
+        }
+
+        class MessageEntity {
+        +String id
+        +String senderId
+        +String receiverId
+        +String content
+        +DateTime timestamp
+        +bool isRead
+        }
+
+        UserEntity "1" -- "0..*" CarEntity : lists
+        UserEntity "1" -- "0..*" MessageEntity : sends
+        CarEntity "1" -- "0..*" MessageEntity : references
+    </div>
+
+    <hr>
+
+    <h2>4. Functional Requirements (Detailed)</h2>
+
+    <h3>4.1 Authentication Module</h3>
+    <ul>
+        <li><strong>FR-AUTH-01</strong>: System shall allow users to register with Email, Password, Name, and Phone.
+        </li>
+        <li><strong>FR-AUTH-02</strong>: System shall validate email format and password strength (min 6 chars).</li>
+        <li><strong>FR-AUTH-03</strong>: System shall persist user session using secure token storage.</li>
+        <li><strong>FR-AUTH-04</strong>: System shall allow users to update their profile photo (avatar).</li>
+    </ul>
+
+    <h3>4.2 Car Management Module</h3>
+    <ul>
+        <li><strong>FR-CAR-01</strong>: Users shall be able to upload up to 10 images per car.</li>
+        <li><strong>FR-CAR-02</strong>: System shall automatically compress images to max 1080p resolution to optimize
+            bandwidth.</li>
+        <li><strong>FR-CAR-03</strong>: Users must select a "Location" from a predefined list (Gaza City, Rafah, etc.).
+        </li>
+        <li><strong>FR-CAR-04</strong>: Sellers can mark their cars as "Sold", removing them from search results.</li>
+    </ul>
+
+    <h3>4.3 Search & Filter Module</h3>
+    <ul>
+        <li><strong>FR-SRCH-01</strong>: Users can filter cars by Price Range (Min/Max).</li>
+        <li><strong>FR-SRCH-02</strong>: Users can filter by Year Range.</li>
+        <li><strong>FR-SRCH-03</strong>: Search results shall be paginated (lazy loaded) for performance.</li>
+    </ul>
+
+    <h3>4.4 Chat Module</h3>
+    <ul>
+        <li><strong>FR-CHAT-01</strong>: Chat shall be initiated from the "Car Details" page.</li>
+        <li><strong>FR-CHAT-02</strong>: Messages shall be synced in real-time across devices.</li>
+        <li><strong>FR-CHAT-03</strong>: Users shall see a list of all active conversations in the "Inbox" tab.</li>
+    </ul>
+
+    <h3>4.5 Admin Module</h3>
+    <ul>
+        <li><strong>FR-ADM-01</strong>: Admins shall see a "Dashboard" with key metrics (Total Users, Total Cars).</li>
+        <li><strong>FR-ADM-02</strong>: Admins can "Approve" or "Reject" pending car listings.</li>
+        <li><strong>FR-ADM-03</strong>: Admins can "Ban" users, preventing them from logging in.</li>
+        <li><strong>FR-ADM-04</strong>: Banned users shall see a specific error message upon login attempt.</li>
+    </ul>
+
+    <h3>4.6 Monetization Module (Future)</h3>
+    <ul>
+        <li><strong>FR-MON-01</strong>: VIP Listings: Sellers can pay to have their car listings pinned to the top of
+            search results.</li>
+        <li><strong>FR-MON-02</strong>: VIP listings shall have a distinct visual badge (e.g., "Featured" or "VIP").
+        </li>
+        <li><strong>FR-MON-03</strong>: System shall support different duration tiers for VIP status (e.g., 3 days, 7
+            days, 30 days).</li>
+    </ul>
+
+    <h3>4.7 Wallet Module (Future)</h3>
+    <ul>
+        <li><strong>FR-WAL-01</strong>: Users shall have a digital wallet to store credits for in-app purchases.</li>
+        <li><strong>FR-WAL-02</strong>: Users can top up their wallet using supported payment gateways.</li>
+        <li><strong>FR-WAL-03</strong>: Wallet balance can be used to purchase VIP listing upgrades.</li>
+        <li><strong>FR-WAL-04</strong>: Users shall be able to view their transaction history (Top-ups, Purchases).</li>
+    </ul>
+
+    <hr>
+
+    <h2>5. Non-Functional Requirements</h2>
+
+    <h3>5.1 Performance</h3>
+    <ul>
+        <li><strong>Response Time</strong>: API calls should complete within 500ms on 4G networks.</li>
+        <li><strong>Image Upload</strong>: Image compression should take < 1s per image on average devices.</li>
+    </ul>
+
+    <h3>5.2 Reliability</h3>
+    <ul>
+        <li><strong>Availability</strong>: 99.9% uptime provided by Firebase SLA.</li>
+        <li><strong>Data Integrity</strong>: Firestore transactions used for critical updates (e.g., status changes).
+        </li>
+    </ul>
+
+    <h3>5.3 Security</h3>
+    <ul>
+        <li><strong>Encryption</strong>: All data in transit is encrypted via SSL/TLS.</li>
+        <li><strong>Access Control</strong>: Firestore Security Rules enforce ownership (only owners can edit their
+            cars).</li>
+    </ul>
+
+    <hr>
+
+    <h2>6. Future Roadmap</h2>
+
+    <h3>Phase 2: Engagement (Month 2)</h3>
+    <ul>
+        <li>Push Notifications (FCM).</li>
+        <li>Advanced Filters (Saved Searches).</li>
+    </ul>
+
+    <h3>Phase 3: Monetization (Month 3)</h3>
+    <ul>
+        <li>Premium Listings (Stripe Integration).</li>
+        <li>Trader Verified Accounts.</li>
+    </ul>
+
+    <h3>Phase 4: Expansion (Month 6)</h3>
+    <ul>
+        <li>Web Application (Flutter Web).</li>
+        <li>AI Price Prediction.</li>
+    </ul>
+
+</body>
+
+</html>
