@@ -134,5 +134,6 @@
   "tokenCopied": "Token copied to clipboard",
   "couldNotGetToken": "Could not get FCM Token",
   "termsOfServiceComingSoon": "Terms of Service coming soon",
-  "reportListing": "Report Listing"
+  "reportListing": "Report Listing",
+  "adjustFiltersHint": "Try adjusting your filters or search query"
 }

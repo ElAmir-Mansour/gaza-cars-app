@@ -102,7 +102,7 @@ class HomePage extends StatelessWidget {
                         if (authState is AuthAuthenticated && authState.user.role == 'admin') {
                           return ListTile(
                             leading: const Icon(Icons.admin_panel_settings_outlined),
-                            title: const Text('Admin Dashboard'),
+                            title: Text(l10n.adminDashboard),
                             onTap: () {
                               context.pop(); // Close drawer
                               context.push('/admin');
@@ -143,20 +143,20 @@ class HomePage extends StatelessWidget {
                       surfaceTintColor: Colors.transparent,
                       leading: Builder(
                         builder: (context) => IconButton(
-                          icon: const Icon(Icons.menu, color: Colors.black87),
+                          icon: Icon(Icons.menu, color: Theme.of(context).colorScheme.onSurface),
                           onPressed: () => Scaffold.of(context).openDrawer(),
                         ),
                       ),
                       title: Text(
                         l10n.appTitle,
-                        style: const TextStyle(
-                          color: Colors.black87,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurface,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       actions: [
                         IconButton(
-                          icon: const Icon(Icons.filter_list, color: Colors.black87),
+                          icon: Icon(Icons.filter_list, color: Theme.of(context).colorScheme.onSurface),
                           tooltip: l10n.filters,
                           onPressed: () {
                             final carBloc = context.read<CarBloc>();
@@ -171,7 +171,7 @@ class HomePage extends StatelessWidget {
                           },
                         ),
                         IconButton(
-                          icon: const Icon(Icons.bug_report, color: Colors.black87),
+                          icon: Icon(Icons.bug_report, color: Theme.of(context).colorScheme.onSurface),
                           tooltip: 'Add Mock Data',
                           onPressed: () => _addMockData(context),
                         ),
@@ -182,7 +182,7 @@ class HomePage extends StatelessWidget {
                           padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
                           child: Container(
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: Theme.of(context).cardColor,
                               borderRadius: BorderRadius.circular(12),
                               boxShadow: [
                                 BoxShadow(
@@ -220,7 +220,7 @@ class HomePage extends StatelessWidget {
                         return EmptyStateWidget(
                           icon: Icons.directions_car_outlined,
                           title: l10n.noCarsFound,
-                          subtitle: 'Try adjusting your filters or search query',
+                          subtitle: l10n.adjustFiltersHint,
                           onRetry: () {
                             context.read<CarBloc>().add(const GetCarsEvent());
                           },
@@ -253,7 +253,7 @@ class HomePage extends StatelessWidget {
                   context.push('/add-car');
                 },
                 icon: const Icon(Icons.add),
-                label: const Text('Sell Car'),
+                label: Text(l10n.addCar),
                 backgroundColor: const Color(0xFF1E88E5),
               ),
             );

@@ -382,4 +382,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get reportListing => 'الإبلاغ عن الإعلان';
+
+  @override
+  String get adjustFiltersHint => 'حاول تعديل الفلاتر أو بحثك';
 }

@@ -12,6 +12,8 @@ class CarEntity extends Equatable {
   final String condition; // 'new', 'used', 'damaged'
   final String location;
   final String description; // Added description field
+  final String transmission;
+  final String fuelType;
   final List<String> images;
   final String status; // 'active', 'sold', 'pending'
   final DateTime createdAt;
@@ -28,6 +30,8 @@ class CarEntity extends Equatable {
     required this.condition,
     required this.location,
     this.description = '', // Optional, defaults to empty
+    this.transmission = 'Automatic', // Default to Automatic
+    this.fuelType = 'Petrol', // Default to Petrol
     required this.images,
     required this.status,
     required this.createdAt,
@@ -46,6 +50,8 @@ class CarEntity extends Equatable {
         condition,
         location,
         description,
+        transmission,
+        fuelType,
         images,
         status,
         createdAt,

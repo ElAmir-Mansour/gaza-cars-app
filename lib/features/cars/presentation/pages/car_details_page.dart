@@ -30,7 +30,7 @@ class CarDetailsPage extends StatelessWidget {
     }
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Stack(
         children: [
           CustomScrollView(
@@ -38,16 +38,16 @@ class CarDetailsPage extends StatelessWidget {
               SliverAppBar(
                 expandedHeight: 300.0,
                 pinned: true,
-                backgroundColor: Colors.white,
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                 elevation: 0,
                 leading: Container(
                   margin: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.9),
+                    color: Theme.of(context).cardColor.withValues(alpha: 0.9),
                     shape: BoxShape.circle,
                   ),
                   child: IconButton(
-                    icon: const Icon(Icons.arrow_back, color: Colors.black),
+                    icon: Icon(Icons.arrow_back, color: Theme.of(context).colorScheme.onSurface),
                     onPressed: () => context.pop(),
                   ),
                 ),
@@ -55,7 +55,7 @@ class CarDetailsPage extends StatelessWidget {
                   Container(
                     margin: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.9),
+                      color: Theme.of(context).cardColor.withValues(alpha: 0.9),
                       shape: BoxShape.circle,
                     ),
                     child: BlocProvider(
@@ -71,7 +71,7 @@ class CarDetailsPage extends StatelessWidget {
                           return IconButton(
                             icon: Icon(
                               isFavorite ? Icons.favorite : Icons.favorite_border,
-                              color: isFavorite ? Colors.red : Colors.black,
+                              color: isFavorite ? Colors.red : Theme.of(context).colorScheme.onSurface,
                             ),
                             onPressed: () {
                               context.read<FavoritesBloc>().add(
@@ -87,11 +87,11 @@ class CarDetailsPage extends StatelessWidget {
                     Container(
                       margin: const EdgeInsets.only(right: 16, top: 8, bottom: 8),
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.9),
+                        color: Theme.of(context).cardColor.withValues(alpha: 0.9),
                         shape: BoxShape.circle,
                       ),
                       child: PopupMenuButton<String>(
-                        icon: const Icon(Icons.more_vert, color: Colors.black),
+                        icon: Icon(Icons.more_vert, color: Theme.of(context).colorScheme.onSurface),
                         onSelected: (value) {
                           if (value == 'report') {
                             _showReportDialog(context, userId!, car.id);
@@ -141,8 +141,8 @@ class CarDetailsPage extends StatelessWidget {
               ),
               SliverToBoxAdapter(
                 child: Container(
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).cardColor,
                     borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
                   ),
                   transform: Matrix4.translationValues(0, -20, 0), // Overlap effect
@@ -172,7 +172,7 @@ class CarDetailsPage extends StatelessWidget {
                                     '${car.year} • ${car.condition}',
                                     style: TextStyle(
                                       fontSize: 16,
-                                      color: Colors.grey[600],
+                                      color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
                                     ),
                                   ),
                                 ],
@@ -204,12 +204,12 @@ class CarDetailsPage extends StatelessWidget {
                           mainAxisSpacing: 12,
                           crossAxisSpacing: 12,
                           children: [
-                            _buildSpecItem(Icons.speed, '${car.mileage} km', 'Mileage'),
-                            _buildSpecItem(Icons.settings, 'Automatic', 'Transmission'), // Placeholder if not in entity
-                            _buildSpecItem(Icons.local_gas_station, 'Petrol', 'Fuel'), // Placeholder if not in entity
-                            _buildSpecItem(Icons.location_on, car.location, 'Location'),
-                            _buildSpecItem(Icons.calendar_today, _formatDate(car.createdAt), l10n.listedDate),
-                            _buildSpecItem(Icons.build, _getLocalizedCondition(l10n, car.condition), l10n.condition),
+                            _buildSpecItem(context, Icons.speed, '${car.mileage} km', 'Mileage'),
+                            _buildSpecItem(context, Icons.settings, _getLocalizedTransmission(l10n, car.transmission), l10n.transmission),
+                            _buildSpecItem(context, Icons.local_gas_station, _getLocalizedFuelType(l10n, car.fuelType), l10n.fuelType),
+                            _buildSpecItem(context, Icons.location_on, car.location, 'Location'),
+                            _buildSpecItem(context, Icons.calendar_today, _formatDate(car.createdAt), l10n.listedDate),
+                            _buildSpecItem(context, Icons.build, _getLocalizedCondition(l10n, car.condition), l10n.condition),
                           ],
                         ),
                         
@@ -221,7 +221,7 @@ class CarDetailsPage extends StatelessWidget {
                         const SizedBox(height: 8),
                         Text(
                           'This is a great car in excellent condition. Contact the seller for more details and to arrange a viewing.', // Placeholder description
-                          style: TextStyle(color: Colors.grey[700], height: 1.5),
+                          style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.8), height: 1.5),
                         ),
                         
                         const SizedBox(height: 100), // Space for bottom bar
@@ -241,7 +241,7 @@ class CarDetailsPage extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Theme.of(context).cardColor,
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withValues(alpha: 0.1),
@@ -335,13 +335,13 @@ class CarDetailsPage extends StatelessWidget {
     );
   } 
   
-  Widget _buildSpecItem(IconData icon, String value, String label) {
+  Widget _buildSpecItem(BuildContext context, IconData icon, String value, String label) {
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: Colors.grey[50],
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey[200]!),
+        border: Border.all(color: Theme.of(context).dividerColor),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -356,7 +356,7 @@ class CarDetailsPage extends StatelessWidget {
           ),
           Text(
             label,
-            style: TextStyle(color: Colors.grey[600], fontSize: 10),
+            style: TextStyle(color: Theme.of(context).textTheme.bodySmall?.color?.withValues(alpha: 0.7), fontSize: 10),
           ),
         ],
       ),
@@ -373,6 +373,32 @@ class CarDetailsPage extends StatelessWidget {
         return l10n.damagedCondition;
       default:
         return condition;
+    }
+  }
+
+  String _getLocalizedTransmission(AppLocalizations l10n, String transmission) {
+    switch (transmission) {
+      case 'Automatic':
+        return l10n.automatic;
+      case 'Manual':
+        return l10n.manual;
+      default:
+        return transmission;
+    }
+  }
+
+  String _getLocalizedFuelType(AppLocalizations l10n, String fuelType) {
+    switch (fuelType) {
+      case 'Petrol':
+        return l10n.petrol;
+      case 'Diesel':
+        return l10n.diesel;
+      case 'Hybrid':
+        return l10n.hybrid;
+      case 'Electric':
+        return l10n.electric;
+      default:
+        return fuelType;
     }
   }
 

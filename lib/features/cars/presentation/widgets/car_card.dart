@@ -24,7 +24,7 @@ class CarCard extends StatelessWidget {
       onTap: () => context.push('/car-details', extra: car),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
@@ -95,7 +95,7 @@ class CarCard extends StatelessWidget {
                           }
                           return Container(
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: Theme.of(context).cardColor,
                               shape: BoxShape.circle,
                               boxShadow: [
                                 BoxShadow(
@@ -154,7 +154,7 @@ class CarCard extends StatelessWidget {
                     '${car.year} • ${car.mileage} km',
                     style: TextStyle(
                       fontSize: 12,
-                      color: Colors.grey[600],
+                      color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -177,7 +177,7 @@ class CarCard extends StatelessWidget {
                             car.location,
                             style: TextStyle(
                               fontSize: 11,
-                              color: Colors.grey[500],
+                              color: Theme.of(context).textTheme.bodySmall?.color?.withValues(alpha: 0.7),
                             ),
                           ),
                         ],

@@ -382,4 +382,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get reportListing => 'Report Listing';
+
+  @override
+  String get adjustFiltersHint => 'Try adjusting your filters or search query';
 }

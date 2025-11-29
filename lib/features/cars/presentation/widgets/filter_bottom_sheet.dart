@@ -90,7 +90,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
 
             // Condition
             DropdownButtonFormField<String>(
-              key: ValueKey(_selectedCondition),
+              key: ValueKey('condition_$_selectedCondition'),
               initialValue: _selectedCondition,
               decoration: InputDecoration(labelText: l10n.condition),
               items: [
@@ -109,7 +109,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
 
             // Transmission
             DropdownButtonFormField<String>(
-              key: ValueKey(_selectedTransmission),
+              key: ValueKey('transmission_$_selectedTransmission'),
               initialValue: _selectedTransmission,
               decoration: const InputDecoration(labelText: 'Transmission'),
               items: [
@@ -127,7 +127,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
 
             // Fuel Type
             DropdownButtonFormField<String>(
-              key: ValueKey(_selectedFuelType),
+              key: ValueKey('fuel_$_selectedFuelType'),
               initialValue: _selectedFuelType,
               decoration: const InputDecoration(labelText: 'Fuel Type'),
               items: [
@@ -147,7 +147,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
 
             // Make
             DropdownButtonFormField<String>(
-              key: ValueKey(_selectedMake),
+              key: ValueKey('make_$_selectedMake'),
               initialValue: _selectedMake,
               decoration: const InputDecoration(labelText: 'Make'),
               items: [
@@ -165,7 +165,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
 
             // Year
             DropdownButtonFormField<String>(
-              key: ValueKey(_selectedYear),
+              key: ValueKey('year_$_selectedYear'),
               initialValue: _selectedYear,
               decoration: const InputDecoration(labelText: 'Year'),
               items: [
@@ -183,7 +183,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
 
             // Location
             DropdownButtonFormField<String>(
-              key: ValueKey(_selectedLocation),
+              key: ValueKey('location_$_selectedLocation'),
               initialValue: _selectedLocation,
               decoration: InputDecoration(labelText: l10n.location),
               items: [

@@ -177,7 +177,10 @@ class CarRemoteDataSourceImpl implements CarRemoteDataSource {
       mileage: data['mileage'] ?? 0,
       condition: data['condition'] ?? '',
       location: data['location'] ?? '',
+
       description: data['description'] ?? '',
+      transmission: data['transmission'] ?? 'Automatic',
+      fuelType: data['fuelType'] ?? 'Petrol',
       images: List<String>.from(data['images'] ?? []),
       status: data['status'] ?? 'active',
       createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
@@ -195,7 +198,10 @@ class CarRemoteDataSourceImpl implements CarRemoteDataSource {
       'mileage': car.mileage,
       'condition': car.condition,
       'location': car.location,
+
       'description': car.description,
+      'transmission': car.transmission,
+      'fuelType': car.fuelType,
       'images': car.images,
       'status': car.status,
       // 'createdAt': car.createdAt, // Handled by server timestamp on create

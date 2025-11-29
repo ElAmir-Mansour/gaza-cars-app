@@ -847,6 +847,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Report Listing'**
   String get reportListing;
+
+  /// No description provided for @adjustFiltersHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Try adjusting your filters or search query'**
+  String get adjustFiltersHint;
 }
 
 class _AppLocalizationsDelegate
