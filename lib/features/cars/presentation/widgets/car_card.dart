@@ -22,26 +22,65 @@ class CarCard extends StatelessWidget {
 
     return GestureDetector(
       onTap: () => context.push('/car-details', extra: car),
-      child: Card(
-        clipBehavior: Clip.antiAlias,
-        elevation: 2,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Stack(
               children: [
-                AspectRatio(
-                  aspectRatio: 16 / 9,
-                  child: car.images.isNotEmpty
-                      ? Image.network(
-                          car.images.first,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) =>
-                              const Center(child: Icon(Icons.error)),
-                        )
-                      : const Center(child: Icon(Icons.directions_car, size: 50)),
+                ClipRRect(
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                  child: AspectRatio(
+                    aspectRatio: 16 / 10,
+                    child: car.images.isNotEmpty
+                        ? Image.network(
+                            car.images.first,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) =>
+                                Container(
+                                  color: Colors.grey[100],
+                                  child: const Center(child: Icon(Icons.error, color: Colors.grey)),
+                                ),
+                          )
+                        : Container(
+                            color: Colors.grey[100],
+                            child: const Center(child: Icon(Icons.directions_car, size: 50, color: Colors.grey)),
+                          ),
+                  ),
                 ),
+                // Condition Badge
+                Positioned(
+                  top: 12,
+                  left: 12,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withValues(alpha: 0.6),
+                      borderRadius: BorderRadius.circular(8),
+
+                    ),
+                    child: Text(
+                      car.condition,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+                // Favorite Button
                 if (userId != null)
                   Positioned(
                     top: 8,
@@ -54,15 +93,25 @@ class CarCard extends StatelessWidget {
                           if (state is FavoritesLoaded) {
                             isFavorite = state.favorites.any((c) => c.id == car.id);
                           }
-                          return CircleAvatar(
-                            backgroundColor: Colors.white,
-                            radius: 16,
+                          return Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.1),
+                                  blurRadius: 4,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
                             child: IconButton(
+                              constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
                               padding: EdgeInsets.zero,
                               icon: Icon(
                                 isFavorite ? Icons.favorite : Icons.favorite_border,
                                 color: isFavorite ? Colors.red : Colors.grey,
-                                size: 20,
+                                size: 18,
                               ),
                               onPressed: () {
                                 context.read<FavoritesBloc>().add(
@@ -82,34 +131,56 @@ class CarCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    '${car.make} ${car.model} ${car.year}',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    '\$${car.price.toStringAsFixed(0)}',
-                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          color: Colors.green.shade700,
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                  const SizedBox(height: 4),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Icon(Icons.location_on, size: 14, color: Colors.grey),
-                      const SizedBox(width: 4),
                       Expanded(
                         child: Text(
-                          car.location,
-                          style: Theme.of(context).textTheme.bodySmall,
+                          '${car.make} ${car.model}',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            height: 1.2,
+                          ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    '${car.year} • ${car.mileage} km',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '\$${car.price.toStringAsFixed(0)}',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w800,
+                          color: Color(0xFF1E88E5), // Premium Blue
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          Icon(Icons.location_on, size: 12, color: Colors.grey[400]),
+                          const SizedBox(width: 2),
+                          Text(
+                            car.location,
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: Colors.grey[500],
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),

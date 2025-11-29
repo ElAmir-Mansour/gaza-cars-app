@@ -94,7 +94,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   child: TextButton(
                     onPressed: _completeOnboarding,
                     style: TextButton.styleFrom(
-                      backgroundColor: Colors.black.withOpacity(0.2),
+                      backgroundColor: Colors.black.withValues(alpha: 0.2),
                       foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),

@@ -41,6 +41,10 @@ The app features a modern, clean aesthetic centered around a **Premium Blue** th
 *   **❤️ Favorites**: Save listings to your watchlist for quick access.
 *   **🌍 Multi-Language Support**: Native support for **English** and **Arabic** (RTL).
 *   **🛡️ Admin Dashboard**: Powerful tools for content moderation and user management.
+*   **✨ Premium UI/UX**:
+    *   **Immersive Details**: Full-screen car images with sticky action buttons.
+    *   **Smart Feed**: Collapsible headers and floating search for maximum screen real estate.
+    *   **Modern Cards**: Clean, rounded designs with instant status badges.
 
 ---
 

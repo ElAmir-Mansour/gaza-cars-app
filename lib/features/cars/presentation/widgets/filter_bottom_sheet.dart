@@ -90,7 +90,8 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
 
             // Condition
             DropdownButtonFormField<String>(
-              value: _selectedCondition,
+              key: ValueKey(_selectedCondition),
+              initialValue: _selectedCondition,
               decoration: InputDecoration(labelText: l10n.condition),
               items: [
                 DropdownMenuItem(value: null, child: Text(l10n.all)),
@@ -108,7 +109,8 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
 
             // Transmission
             DropdownButtonFormField<String>(
-              value: _selectedTransmission,
+              key: ValueKey(_selectedTransmission),
+              initialValue: _selectedTransmission,
               decoration: const InputDecoration(labelText: 'Transmission'),
               items: [
                 const DropdownMenuItem(value: null, child: Text('Any')),
@@ -125,7 +127,8 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
 
             // Fuel Type
             DropdownButtonFormField<String>(
-              value: _selectedFuelType,
+              key: ValueKey(_selectedFuelType),
+              initialValue: _selectedFuelType,
               decoration: const InputDecoration(labelText: 'Fuel Type'),
               items: [
                 const DropdownMenuItem(value: null, child: Text('Any')),
@@ -144,7 +147,8 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
 
             // Make
             DropdownButtonFormField<String>(
-              value: _selectedMake,
+              key: ValueKey(_selectedMake),
+              initialValue: _selectedMake,
               decoration: const InputDecoration(labelText: 'Make'),
               items: [
                 const DropdownMenuItem(value: null, child: Text('Any')),
@@ -161,7 +165,8 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
 
             // Year
             DropdownButtonFormField<String>(
-              value: _selectedYear,
+              key: ValueKey(_selectedYear),
+              initialValue: _selectedYear,
               decoration: const InputDecoration(labelText: 'Year'),
               items: [
                 const DropdownMenuItem(value: null, child: Text('Any')),
@@ -178,7 +183,8 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
 
             // Location
             DropdownButtonFormField<String>(
-              value: _selectedLocation,
+              key: ValueKey(_selectedLocation),
+              initialValue: _selectedLocation,
               decoration: InputDecoration(labelText: l10n.location),
               items: [
                 DropdownMenuItem(value: null, child: Text(l10n.all)),

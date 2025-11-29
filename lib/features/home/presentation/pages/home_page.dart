@@ -36,87 +36,44 @@ class HomePage extends StatelessWidget {
         child: Builder(
           builder: (context) {
             return Scaffold(
-              appBar: AppBar(
-                leading: Builder(
-                  builder: (context) => IconButton(
-                    icon: const Icon(Icons.menu),
-                    onPressed: () {
-                      Scaffold.of(context).openDrawer();
-                    },
-                  ),
-                ),
-                title: Text(l10n.appTitle),
-                bottom: PreferredSize(
-                  preferredSize: const Size.fromHeight(60),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextField(
-                      decoration: InputDecoration(
-                        hintText: l10n.searchHint,
-                        prefixIcon: const Icon(Icons.search),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide.none,
-                        ),
-                        filled: true,
-                        fillColor: Colors.white,
-                      ),
-                      onChanged: (query) {
-                        context.read<CarBloc>().add(FilterCarsEvent(query));
-                      },
-                    ),
-                  ),
-                ),
-                actions: [
-                  IconButton(
-                    icon: const Icon(Icons.filter_list),
-                    tooltip: l10n.filters,
-                    onPressed: () {
-                      final carBloc = context.read<CarBloc>();
-                      showModalBottomSheet(
-                        context: context,
-                        isScrollControlled: true,
-                        builder: (bottomSheetContext) => BlocProvider.value(
-                          value: carBloc,
-                          child: const FilterBottomSheet(),
-                        ),
-                      );
-                    },
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.bug_report),
-                    tooltip: 'Add Mock Data',
-                    onPressed: () {
-                      _addMockData(context);
-                    },
-                  ),
-                ],
-              ),
               drawer: Drawer(
                 child: ListView(
                   padding: EdgeInsets.zero,
                   children: [
                     DrawerHeader(
                       decoration: const BoxDecoration(
-                        color: Colors.blue,
+                        color: Color(0xFF1E88E5), // Premium Blue
                       ),
-                      child: Text(
-                        l10n.appTitle,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 24,
-                        ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          const CircleAvatar(
+                            backgroundColor: Colors.white,
+                            radius: 30,
+                            child: Icon(Icons.directions_car, size: 35, color: Color(0xFF1E88E5)),
+                          ),
+                          const SizedBox(height: 10),
+                          Text(
+                            l10n.appTitle,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     ListTile(
-                      leading: const Icon(Icons.home),
+                      leading: const Icon(Icons.home_outlined),
                       title: Text(l10n.home),
                       onTap: () {
                         context.pop(); // Close drawer
                       },
                     ),
                     ListTile(
-                      leading: const Icon(Icons.list),
+                      leading: const Icon(Icons.list_alt),
                       title: Text(l10n.myListings),
                       onTap: () {
                         context.pop(); // Close drawer
@@ -124,7 +81,7 @@ class HomePage extends StatelessWidget {
                       },
                     ),
                     ListTile(
-                      leading: const Icon(Icons.favorite),
+                      leading: const Icon(Icons.favorite_border),
                       title: Text(l10n.favorites),
                       onTap: () {
                         context.pop(); // Close drawer
@@ -132,7 +89,7 @@ class HomePage extends StatelessWidget {
                       },
                     ),
                     ListTile(
-                      leading: const Icon(Icons.message),
+                      leading: const Icon(Icons.chat_bubble_outline),
                       title: const Text('Messages'),
                       onTap: () {
                         context.pop(); // Close drawer
@@ -144,7 +101,7 @@ class HomePage extends StatelessWidget {
                       builder: (context, authState) {
                         if (authState is AuthAuthenticated && authState.user.role == 'admin') {
                           return ListTile(
-                            leading: const Icon(Icons.admin_panel_settings),
+                            leading: const Icon(Icons.admin_panel_settings_outlined),
                             title: const Text('Admin Dashboard'),
                             onTap: () {
                               context.pop(); // Close drawer
@@ -155,18 +112,18 @@ class HomePage extends StatelessWidget {
                         return const SizedBox.shrink();
                       },
                     ),
+                    const Divider(),
                     ListTile(
-                      leading: const Icon(Icons.settings),
+                      leading: const Icon(Icons.settings_outlined),
                       title: Text(l10n.settings),
                       onTap: () {
                         context.pop(); // Close drawer
                         context.push('/settings');
                       },
                     ),
-                    const Divider(),
                     ListTile(
-                      leading: const Icon(Icons.logout),
-                      title: Text(l10n.logout),
+                      leading: const Icon(Icons.logout, color: Colors.red),
+                      title: Text(l10n.logout, style: const TextStyle(color: Colors.red)),
                       onTap: () {
                         context.read<AuthBloc>().add(LogoutEvent());
                       },
@@ -174,50 +131,131 @@ class HomePage extends StatelessWidget {
                   ],
                 ),
               ),
-              body: BlocBuilder<CarBloc, CarState>(
-                builder: (context, state) {
-                  if (state is CarLoading) {
-                    return const CarListShimmer();
-                  } else if (state is CarLoaded) {
-                    final displayCars = state.filteredCars;
+              body: NestedScrollView(
+                headerSliverBuilder: (context, innerBoxIsScrolled) {
+                  return [
+                    SliverAppBar(
+                      expandedHeight: 120.0,
+                      floating: true,
+                      pinned: true,
+                      elevation: 0,
+                      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                      surfaceTintColor: Colors.transparent,
+                      leading: Builder(
+                        builder: (context) => IconButton(
+                          icon: const Icon(Icons.menu, color: Colors.black87),
+                          onPressed: () => Scaffold.of(context).openDrawer(),
+                        ),
+                      ),
+                      title: Text(
+                        l10n.appTitle,
+                        style: const TextStyle(
+                          color: Colors.black87,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      actions: [
+                        IconButton(
+                          icon: const Icon(Icons.filter_list, color: Colors.black87),
+                          tooltip: l10n.filters,
+                          onPressed: () {
+                            final carBloc = context.read<CarBloc>();
+                            showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: true,
+                              builder: (bottomSheetContext) => BlocProvider.value(
+                                value: carBloc,
+                                child: const FilterBottomSheet(),
+                              ),
+                            );
+                          },
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.bug_report, color: Colors.black87),
+                          tooltip: 'Add Mock Data',
+                          onPressed: () => _addMockData(context),
+                        ),
+                      ],
+                      bottom: PreferredSize(
+                        preferredSize: const Size.fromHeight(60),
+                        child: Container(
+                          padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.05),
+                                  blurRadius: 10,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            child: TextField(
+                              decoration: InputDecoration(
+                                hintText: l10n.searchHint,
+                                prefixIcon: const Icon(Icons.search, color: Colors.grey),
+                                border: InputBorder.none,
+                                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                              ),
+                              onChanged: (query) {
+                                context.read<CarBloc>().add(FilterCarsEvent(query));
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ];
+                },
+                body: BlocBuilder<CarBloc, CarState>(
+                  builder: (context, state) {
+                    if (state is CarLoading) {
+                      return const CarListShimmer();
+                    } else if (state is CarLoaded) {
+                      final displayCars = state.filteredCars;
 
-                    if (displayCars.isEmpty) {
+                      if (displayCars.isEmpty) {
+                        return EmptyStateWidget(
+                          icon: Icons.directions_car_outlined,
+                          title: l10n.noCarsFound,
+                          subtitle: 'Try adjusting your filters or search query',
+                          onRetry: () {
+                            context.read<CarBloc>().add(const GetCarsEvent());
+                          },
+                          retryText: l10n.retry,
+                        );
+                      }
+                      return RefreshIndicator(
+                        onRefresh: () async {
+                          context.read<CarBloc>().add(const GetCarsEvent());
+                        },
+                        child: _CarList(cars: displayCars, hasReachedMax: state.hasReachedMax),
+                      );
+                    } else if (state is CarError) {
                       return EmptyStateWidget(
-                        icon: Icons.directions_car_outlined,
-                        title: l10n.noCarsFound,
-                        subtitle: 'Try adjusting your filters or search query',
+                        icon: Icons.error_outline,
+                        title: l10n.error,
+                        subtitle: state.message,
                         onRetry: () {
                           context.read<CarBloc>().add(const GetCarsEvent());
                         },
                         retryText: l10n.retry,
                       );
                     }
-                    return RefreshIndicator(
-                      onRefresh: () async {
-                        context.read<CarBloc>().add(const GetCarsEvent());
-                      },
-                      child: _CarList(cars: displayCars, hasReachedMax: state.hasReachedMax),
-                    );
-                  } else if (state is CarError) {
-                    return EmptyStateWidget(
-                      icon: Icons.error_outline,
-                      title: l10n.error,
-                      subtitle: state.message,
-                      onRetry: () {
-                        context.read<CarBloc>().add(const GetCarsEvent());
-                      },
-                      retryText: l10n.retry,
-                    );
-                  }
-                  return const SizedBox.shrink();
-                },
+                    return const SizedBox.shrink();
+                  },
+                ),
               ),
-              floatingActionButton: FloatingActionButton(
-              onPressed: () {
-                context.push('/add-car');
-              },
-              child: const Icon(Icons.add),
-            ),
+              floatingActionButton: FloatingActionButton.extended(
+                onPressed: () {
+                  context.push('/add-car');
+                },
+                icon: const Icon(Icons.add),
+                label: const Text('Sell Car'),
+                backgroundColor: const Color(0xFF1E88E5),
+              ),
             );
           }
         ),
