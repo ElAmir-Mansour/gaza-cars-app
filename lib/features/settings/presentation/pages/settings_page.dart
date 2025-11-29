@@ -226,4 +226,15 @@ class SettingsPage extends StatelessWidget {
       ),
     );
   }
+
+
+  Future<void> _launchUrl(BuildContext context, String url) async {
+    if (!await launchUrl(Uri.parse(url))) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Could not launch $url')),
+        );
+      }
+    }
+  }
 }

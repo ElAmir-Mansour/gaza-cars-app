@@ -7,6 +7,7 @@ import '../../domain/usecases/delete_car_usecase.dart';
 import '../../domain/usecases/get_cars_usecase.dart';
 import '../../domain/usecases/update_car_usecase.dart';
 import '../../domain/usecases/upload_car_images_usecase.dart';
+import '../../../../core/error/failures.dart';
 import 'car_event.dart';
 import 'car_state.dart';
 
@@ -344,5 +345,17 @@ class CarBloc extends Bloc<CarEvent, CarState> {
         isFetchingMore: false,
       )),
     );
+  }
+
+
+  String _mapFailureToMessage(Failure failure) {
+    switch (failure.runtimeType) {
+      case ServerFailure:
+        return failure.message;
+      case CacheFailure:
+        return 'Cache Failure';
+      default:
+        return 'Unexpected Error';
+    }
   }
 }
