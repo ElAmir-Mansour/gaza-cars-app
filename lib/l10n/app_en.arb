@@ -133,5 +133,6 @@
   "viewFcmToken": "View FCM Token",
   "tokenCopied": "Token copied to clipboard",
   "couldNotGetToken": "Could not get FCM Token",
-  "termsOfServiceComingSoon": "Terms of Service coming soon"
+  "termsOfServiceComingSoon": "Terms of Service coming soon",
+  "reportListing": "Report Listing"
 }

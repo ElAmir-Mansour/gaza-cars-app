@@ -288,4 +288,50 @@ class CarDetailsPage extends StatelessWidget {
   String _formatDate(DateTime date) {
     return '${date.day}/${date.month}/${date.year}';
   }
+
+  void _showReportDialog(BuildContext context, String reporterId, String listingId) {
+    showDialog(
+      context: context,
+      builder: (context) => BlocProvider(
+        create: (context) => sl<ReportCubit>(),
+        child: Builder(
+          builder: (context) {
+            return AlertDialog(
+              title: const Text('Report Listing'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('Why are you reporting this listing?'),
+                  const SizedBox(height: 16),
+                  ...['Spam', 'Inappropriate Content', 'Misleading', 'Other'].map(
+                    (reason) => ListTile(
+                      title: Text(reason),
+                      onTap: () {
+                        context.read<ReportCubit>().submitReport(
+                              reporterId: reporterId,
+                              reportedId: listingId,
+                              type: 'listing',
+                              reason: reason,
+                            );
+                        Navigator.pop(context);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Report submitted. Thank you.')),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Cancel'),
+                ),
+              ],
+            );
+          }
+        ),
+      ),
+    );
+  }
 }

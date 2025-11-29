@@ -178,4 +178,29 @@ class _ChatPageState extends State<ChatPage> {
       ),
     );
   }
+  void _showBlockDialog(BuildContext context, String userId) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Block User?'),
+        content: const Text('You will no longer receive messages from this user.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              context.read<ChatBloc>().add(BlockUserEvent(userId));
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('User blocked')),
+              );
+            },
+            child: const Text('Block', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+  }
 }

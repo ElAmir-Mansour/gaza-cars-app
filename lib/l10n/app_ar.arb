@@ -133,5 +133,6 @@
   "viewFcmToken": "عرض رمز FCM",
   "tokenCopied": "تم نسخ الرمز إلى الحافظة",
   "couldNotGetToken": "تعذر الحصول على رمز FCM",
-  "termsOfServiceComingSoon": "شروط الخدمة قريباً"
+  "termsOfServiceComingSoon": "شروط الخدمة قريباً",
+  "reportListing": "الإبلاغ عن الإعلان"
 }

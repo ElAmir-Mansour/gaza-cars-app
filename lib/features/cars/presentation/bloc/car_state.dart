@@ -31,6 +31,7 @@ class CarLoaded extends CarState {
 
   const CarLoaded({
     required this.cars,
+    required this.filteredCars,
     this.minPrice,
     this.maxPrice,
     this.condition,
@@ -41,12 +42,14 @@ class CarLoaded extends CarState {
     this.make,
     this.year,
     this.hasReachedMax = false,
+    this.isFetchingMore = false,
   });
 
   CarLoaded copyWith({
     List<CarEntity>? cars,
-    // Removed filteredCars and isFetchingMore as per instruction
+    List<CarEntity>? filteredCars,
     bool? hasReachedMax,
+    bool? isFetchingMore,
     double? minPrice,
     double? maxPrice,
     String? condition,
@@ -59,8 +62,9 @@ class CarLoaded extends CarState {
   }) {
     return CarLoaded(
       cars: cars ?? this.cars,
-      // Removed filteredCars and isFetchingMore as per instruction
+      filteredCars: filteredCars ?? this.filteredCars,
       hasReachedMax: hasReachedMax ?? this.hasReachedMax,
+      isFetchingMore: isFetchingMore ?? this.isFetchingMore,
       minPrice: minPrice ?? this.minPrice,
       maxPrice: maxPrice ?? this.maxPrice,
       condition: condition ?? this.condition,
@@ -76,8 +80,9 @@ class CarLoaded extends CarState {
   @override
   List<Object?> get props => [
     cars, 
-    // Removed filteredCars and isFetchingMore as per instruction
+    filteredCars,
     hasReachedMax, 
+    isFetchingMore,
     minPrice,
     maxPrice,
     condition,

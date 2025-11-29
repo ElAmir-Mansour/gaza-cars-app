@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/services/notification_service.dart';
 import '../bloc/language_cubit.dart';
 import '../bloc/language_state.dart';
+
+import '../../../../features/auth/presentation/bloc/auth_event.dart';
+
+import '../../../../features/auth/presentation/bloc/auth_bloc.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -58,7 +63,16 @@ class SettingsPage extends StatelessWidget {
                 title: const Text('Privacy Policy'),
                 trailing: const Icon(Icons.arrow_forward_ios),
                 onTap: () {
-                  context.push('/privacy-policy');
+                  _launchUrl(context, 'https://elamir-mansour.github.io/gaza-cars-app/privacy_policy.html');
+                },
+              ),
+              const Divider(),
+              ListTile(
+                leading: const Icon(Icons.description_outlined),
+                title: const Text('Terms of Service'),
+                trailing: const Icon(Icons.arrow_forward_ios),
+                onTap: () {
+                  _launchUrl(context, 'https://elamir-mansour.github.io/gaza-cars-app/terms_of_service.html');
                 },
               ),
               ListTile(
@@ -176,7 +190,6 @@ class SettingsPage extends StatelessWidget {
                       ),
                     );
                   },
-                ),
                 ),
               const Divider(),
               ListTile(

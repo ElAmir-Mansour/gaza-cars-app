@@ -19,10 +19,16 @@ import 'package:shared_preferences/shared_preferences.dart' as _i460;
 
 import '../../features/admin/data/datasources/admin_remote_data_source.dart'
     as _i517;
+import '../../features/admin/data/datasources/report_remote_data_source.dart'
+    as _i1043;
 import '../../features/admin/data/repositories/admin_repository_impl.dart'
     as _i335;
+import '../../features/admin/data/repositories/report_repository_impl.dart'
+    as _i742;
 import '../../features/admin/domain/repositories/admin_repository.dart'
     as _i583;
+import '../../features/admin/domain/repositories/report_repository.dart'
+    as _i799;
 import '../../features/admin/domain/usecases/approve_car_usecase.dart' as _i946;
 import '../../features/admin/domain/usecases/ban_user_usecase.dart' as _i512;
 import '../../features/admin/domain/usecases/get_admin_stats_usecase.dart'
@@ -32,10 +38,13 @@ import '../../features/admin/domain/usecases/get_all_users_usecase.dart'
 import '../../features/admin/domain/usecases/get_pending_cars_usecase.dart'
     as _i977;
 import '../../features/admin/domain/usecases/reject_car_usecase.dart' as _i866;
+import '../../features/admin/domain/usecases/submit_report_usecase.dart'
+    as _i307;
 import '../../features/admin/domain/usecases/unban_user_usecase.dart' as _i855;
 import '../../features/admin/presentation/bloc/admin_stats_bloc.dart' as _i194;
 import '../../features/admin/presentation/bloc/car_moderation_bloc.dart'
     as _i732;
+import '../../features/admin/presentation/bloc/report_cubit.dart' as _i154;
 import '../../features/admin/presentation/bloc/user_management_bloc.dart'
     as _i309;
 import '../../features/auth/data/datasources/auth_remote_data_source.dart'
@@ -44,6 +53,9 @@ import '../../features/auth/data/repositories/auth_repository_impl.dart'
     as _i153;
 import '../../features/auth/domain/repositories/auth_repository.dart' as _i787;
 import '../../features/auth/domain/usecases/apple_login_usecase.dart' as _i832;
+import '../../features/auth/domain/usecases/block_user_usecase.dart' as _i754;
+import '../../features/auth/domain/usecases/delete_account_usecase.dart'
+    as _i914;
 import '../../features/auth/domain/usecases/get_current_user_usecase.dart'
     as _i17;
 import '../../features/auth/domain/usecases/google_login_usecase.dart' as _i850;
@@ -100,11 +112,17 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i941.NotificationService>(
       () => _i941.NotificationService(),
     );
+    gh.lazySingleton<_i1043.ReportRemoteDataSource>(
+      () => _i1043.ReportRemoteDataSourceImpl(gh<_i974.FirebaseFirestore>()),
+    );
     gh.lazySingleton<_i434.CarRemoteDataSource>(
       () => _i434.CarRemoteDataSourceImpl(
         firestore: gh<_i974.FirebaseFirestore>(),
         storage: gh<_i457.FirebaseStorage>(),
       ),
+    );
+    gh.lazySingleton<_i799.ReportRepository>(
+      () => _i742.ReportRepositoryImpl(gh<_i1043.ReportRemoteDataSource>()),
     );
     gh.lazySingleton<_i107.AuthRemoteDataSource>(
       () => _i107.AuthRemoteDataSourceImpl(
@@ -134,6 +152,9 @@ extension GetItInjectableX on _i174.GetIt {
         remoteDataSource: gh<_i517.AdminRemoteDataSource>(),
         auth: gh<_i59.FirebaseAuth>(),
       ),
+    );
+    gh.lazySingleton<_i307.SubmitReportUseCase>(
+      () => _i307.SubmitReportUseCase(gh<_i799.ReportRepository>()),
     );
     gh.lazySingleton<_i82.CarRepository>(
       () => _i31.CarRepositoryImpl(
@@ -199,6 +220,9 @@ extension GetItInjectableX on _i174.GetIt {
         toggleFavoriteUseCase: gh<_i29.ToggleFavoriteUseCase>(),
       ),
     );
+    gh.factory<_i154.ReportCubit>(
+      () => _i154.ReportCubit(gh<_i307.SubmitReportUseCase>()),
+    );
     gh.factory<_i732.CarModerationBloc>(
       () => _i732.CarModerationBloc(
         getPendingCarsUseCase: gh<_i977.GetPendingCarsUseCase>(),
@@ -208,6 +232,12 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i832.AppleLoginUseCase>(
       () => _i832.AppleLoginUseCase(gh<_i787.AuthRepository>()),
+    );
+    gh.lazySingleton<_i754.BlockUserUseCase>(
+      () => _i754.BlockUserUseCase(gh<_i787.AuthRepository>()),
+    );
+    gh.lazySingleton<_i914.DeleteAccountUseCase>(
+      () => _i914.DeleteAccountUseCase(gh<_i787.AuthRepository>()),
     );
     gh.lazySingleton<_i17.GetCurrentUserUseCase>(
       () => _i17.GetCurrentUserUseCase(gh<_i787.AuthRepository>()),
@@ -263,12 +293,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i795.SendMessageUseCase>(
       () => _i795.SendMessageUseCase(gh<_i420.ChatRepository>()),
     );
-    gh.factory<_i65.ChatBloc>(
-      () => _i65.ChatBloc(
-        getChatsUseCase: gh<_i692.GetChatsUseCase>(),
-        createChatUseCase: gh<_i599.CreateChatUseCase>(),
-      ),
-    );
     gh.factory<_i797.AuthBloc>(
       () => _i797.AuthBloc(
         gh<_i188.LoginUseCase>(),
@@ -278,12 +302,20 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i850.GoogleLoginUseCase>(),
         gh<_i832.AppleLoginUseCase>(),
         gh<_i961.SendPasswordResetEmailUseCase>(),
+        gh<_i914.DeleteAccountUseCase>(),
       ),
     );
     gh.factory<_i239.MessageBloc>(
       () => _i239.MessageBloc(
         getMessagesUseCase: gh<_i325.GetMessagesUseCase>(),
         sendMessageUseCase: gh<_i795.SendMessageUseCase>(),
+      ),
+    );
+    gh.factory<_i65.ChatBloc>(
+      () => _i65.ChatBloc(
+        getChatsUseCase: gh<_i692.GetChatsUseCase>(),
+        createChatUseCase: gh<_i599.CreateChatUseCase>(),
+        blockUserUseCase: gh<_i754.BlockUserUseCase>(),
       ),
     );
     return this;

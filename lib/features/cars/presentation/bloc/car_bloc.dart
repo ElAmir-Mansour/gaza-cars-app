@@ -69,7 +69,7 @@ class CarBloc extends Bloc<CarEvent, CarState> {
         final lastCar = currentState.cars.last;
         
         final result = await getCarsUseCase(GetCarsParams(
-          startAfter: lastCar.createdAt,
+          startAfterValues: [lastCar.createdAt],
           minPrice: minPrice,
           maxPrice: maxPrice,
           condition: condition,
@@ -113,9 +113,10 @@ class CarBloc extends Bloc<CarEvent, CarState> {
           (failure) => emit(CarError(failure.message)),
           (cars) {
             emit(CarLoaded(
-              cars, 
+              cars: cars, 
               filteredCars: cars,
               hasReachedMax: cars.length < 10,
+              isFetchingMore: false,
               minPrice: minPrice,
               maxPrice: maxPrice,
               condition: condition,
@@ -225,7 +226,7 @@ class CarBloc extends Bloc<CarEvent, CarState> {
       ));
 
       result.fold(
-        (failure) => emit(CarError(message: _mapFailureToMessage(failure))),
+        (failure) => emit(CarError(_mapFailureToMessage(failure))),
         (newCars) {
           if (newCars.isEmpty) {
             emit(currentState.copyWith(hasReachedMax: true));
@@ -284,9 +285,10 @@ class CarBloc extends Bloc<CarEvent, CarState> {
       (failure) => emit(CarError(failure.message)),
       (cars) {
         emit(CarLoaded(
-          cars,
+          cars: cars,
           filteredCars: cars,
           hasReachedMax: cars.length < 10,
+          isFetchingMore: false,
           minPrice: minPrice,
           maxPrice: maxPrice,
           condition: condition,
@@ -325,9 +327,10 @@ class CarBloc extends Bloc<CarEvent, CarState> {
     ));
 
     result.fold(
-      (failure) => emit(CarError(message: _mapFailureToMessage(failure))),
+      (failure) => emit(CarError(_mapFailureToMessage(failure))),
       (cars) => emit(CarLoaded(
         cars: cars,
+        filteredCars: cars,
         minPrice: event.minPrice,
         maxPrice: event.maxPrice,
         condition: event.condition,
@@ -338,6 +341,7 @@ class CarBloc extends Bloc<CarEvent, CarState> {
         make: event.make,
         year: event.year,
         hasReachedMax: cars.length < 10,
+        isFetchingMore: false,
       )),
     );
   }

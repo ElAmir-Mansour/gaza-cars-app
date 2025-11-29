@@ -10,6 +10,7 @@ import '../../domain/usecases/google_login_usecase.dart'; // Added import
 import '../../domain/usecases/apple_login_usecase.dart'; // Added import
 import '../../domain/usecases/send_password_reset_email_usecase.dart';
 import '../../../../core/error/failures.dart'; // Added import for Failure
+import '../../domain/usecases/delete_account_usecase.dart';
 import 'auth_event.dart';
 import 'auth_state.dart';
 

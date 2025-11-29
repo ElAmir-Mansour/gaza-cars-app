@@ -841,6 +841,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Terms of Service coming soon'**
   String get termsOfServiceComingSoon;
+
+  /// No description provided for @reportListing.
+  ///
+  /// In en, this message translates to:
+  /// **'Report Listing'**
+  String get reportListing;
 }
 
 class _AppLocalizationsDelegate

@@ -66,6 +66,7 @@ class ChatListPage extends StatelessWidget {
                       DateFormat('MMM d, HH:mm').format(chat.lastMessageTime),
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
+                    onTap: () {
                       final otherUserId = chat.participants.firstWhere((id) => id != userId, orElse: () => '');
                       context.push('/chat/${chat.id}', extra: {
                         'title': chat.carName,

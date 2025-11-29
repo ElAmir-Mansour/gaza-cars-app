@@ -6,7 +6,6 @@ import '../entities/car_entity.dart';
 abstract class CarRepository {
   Future<Either<Failure, List<CarEntity>>> getCars({
     List<Object>? startAfterValues,
-    DateTime? startAfter,
     double? minPrice,
     double? maxPrice,
     String? condition,

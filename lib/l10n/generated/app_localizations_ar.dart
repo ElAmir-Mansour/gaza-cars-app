@@ -379,4 +379,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get termsOfServiceComingSoon => 'شروط الخدمة قريباً';
+
+  @override
+  String get reportListing => 'الإبلاغ عن الإعلان';
 }

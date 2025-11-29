@@ -118,4 +118,33 @@ class AuthRepositoryImpl implements AuthRepository {
       return Left(e);
     }
   }
+  @override
+  Future<Either<Failure, void>> deleteAccount() async {
+    try {
+      await remoteDataSource.deleteAccount();
+      return const Right(null);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> blockUser(String userId) async {
+    try {
+      await remoteDataSource.blockUser(userId);
+      return const Right(null);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> unblockUser(String userId) async {
+    try {
+      await remoteDataSource.unblockUser(userId);
+      return const Right(null);
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
 }

@@ -379,4 +379,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get termsOfServiceComingSoon => 'Terms of Service coming soon';
+
+  @override
+  String get reportListing => 'Report Listing';
 }
