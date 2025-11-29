@@ -13,6 +13,7 @@ import '../../../chat/presentation/bloc/chat_bloc.dart';
 import '../../../chat/presentation/bloc/chat_event.dart';
 import '../../../chat/presentation/bloc/chat_state.dart';
 import '../../../admin/presentation/bloc/report_cubit.dart';
+import '../../../../shared/widgets/cached_image.dart';
 
 
 class CarDetailsPage extends StatelessWidget {
@@ -124,12 +125,10 @@ class CarDetailsPage extends StatelessWidget {
                             autoPlay: car.images.length > 1,
                           ),
                           items: car.images.map((imageUrl) {
-                            return Image.network(
-                              imageUrl,
+                            return CachedImage(
+                              imageUrl: imageUrl,
                               fit: BoxFit.cover,
                               width: double.infinity,
-                              errorBuilder: (context, error, stackTrace) =>
-                                  Container(color: Colors.grey[200], child: const Icon(Icons.error)),
                             );
                           }).toList(),
                         )

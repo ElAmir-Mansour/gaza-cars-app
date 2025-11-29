@@ -170,11 +170,7 @@ class HomePage extends StatelessWidget {
                             );
                           },
                         ),
-                        IconButton(
-                          icon: Icon(Icons.bug_report, color: Theme.of(context).colorScheme.onSurface),
-                          tooltip: 'Add Mock Data',
-                          onPressed: () => _addMockData(context),
-                        ),
+
                       ],
                       bottom: PreferredSize(
                         preferredSize: const Size.fromHeight(60),
@@ -263,72 +259,6 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  void _addMockData(BuildContext context) {
-    final authState = context.read<AuthBloc>().state;
-    if (authState is AuthAuthenticated) {
-      final userId = authState.user.uid;
-      
-      final List<CarEntity> mockCars = [
-        CarEntity(
-          id: '',
-          sellerId: userId,
-          sellerPhone: '+970 599 123 456',
-          make: 'Toyota',
-          model: 'Camry',
-          year: 2020,
-          price: 25000,
-          mileage: 15000,
-          condition: 'Used',
-          location: 'Gaza City',
-          images: [],
-          status: 'active',
-          createdAt: DateTime.now(),
-        ),
-        CarEntity(
-          id: '',
-          sellerId: userId,
-          sellerPhone: '+970 599 234 567',
-          make: 'Hyundai',
-          model: 'Tucson',
-          year: 2021,
-          price: 28000,
-          mileage: 10000,
-          condition: 'Used',
-          location: 'Khan Yunis',
-          images: [],
-          status: 'active',
-          createdAt: DateTime.now(),
-        ),
-        CarEntity(
-          id: '',
-          sellerId: userId,
-          sellerPhone: '+970 599 345 678',
-          make: 'Kia',
-          model: 'Sportage',
-          year: 2019,
-          price: 22000,
-          mileage: 45000,
-          condition: 'Used',
-          location: 'Rafah',
-          images: [],
-          status: 'active',
-          createdAt: DateTime.now(),
-        ),
-      ];
-
-      for (final car in mockCars) {
-        context.read<CarBloc>().add(AddCarEvent(car));
-      }
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Adding 3 mock cars...')),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('You must be logged in to add mock data')),
-      );
-    }
-  }
 }
 
 

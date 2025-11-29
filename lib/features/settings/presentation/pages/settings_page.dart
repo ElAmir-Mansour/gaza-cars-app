@@ -3,8 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../l10n/generated/app_localizations.dart';
-import '../../../../core/di/injection_container.dart';
-import '../../../../core/services/notification_service.dart';
 import '../bloc/language_cubit.dart';
 import '../bloc/language_state.dart';
 
@@ -84,113 +82,7 @@ class SettingsPage extends StatelessWidget {
                 },
               ),
               const Divider(),
-              if (true) // Always show for now, or use kDebugMode
-                ListTile(
-                  leading: const Icon(Icons.notifications_active, color: Colors.orange),
-                  title: const Text('Debug Notifications'),
-                  subtitle: const Text('Simulate push notifications'),
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) => SimpleDialog(
-                        title: const Text('Test Notifications'),
-                        children: [
-                          SimpleDialogOption(
-                            onPressed: () {
-                              sl<NotificationService>().showTestNotification(
-                                title: 'Car Approved! 🎉',
-                                body: 'Your Toyota Camry has been approved and is now live.',
-                                payload: 'carId: 123, status: approved',
-                              );
-                              Navigator.pop(context);
-                            },
-                            child: const Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text('Simulate "Car Approved"'),
-                            ),
-                          ),
-                          SimpleDialogOption(
-                            onPressed: () {
-                              sl<NotificationService>().showTestNotification(
-                                title: 'Car Rejected ⚠️',
-                                body: 'Your Honda Civic was rejected. Please check the guidelines.',
-                                payload: 'carId: 456, status: rejected',
-                              );
-                              Navigator.pop(context);
-                            },
-                            child: const Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text('Simulate "Car Rejected"'),
-                            ),
-                          ),
-                          SimpleDialogOption(
-                            onPressed: () {
-                              sl<NotificationService>().showTestNotification(
-                                title: 'New Message 💬',
-                                body: 'Ahmed sent you a message about your BMW.',
-                                payload: 'chatId: 789',
-                              );
-                              Navigator.pop(context);
-                            },
-                            child: const Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text('Simulate "New Message"'),
-                            ),
-                          ),
-                          const Divider(),
-                          SimpleDialogOption(
-                            onPressed: () async {
-                              final token = await sl<NotificationService>().getToken();
-                              if (context.mounted) {
-                                if (token != null) {
-                                  // Clipboard requires 'services' library but we can just print for now 
-                                  // or use SelectableText if Clipboard is not imported.
-                                  // Let's assume we can import services.
-                                  // Actually, let's just show it in a dialog for manual copying if needed, 
-                                  // or print to console which is safer without adding imports.
-                                  // But user asked for "phone" testing, so console might not be visible easily.
-                                  // Let's try to use Clipboard.
-                                  // We need to import 'package:flutter/services.dart'.
-                                  debugPrint('🔥 FCM Token: $token');
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text('Token copied to clipboard: $token')),
-                                  );
-                                  // We will add the import in a separate step if needed, 
-                                  // but for now let's just print and show SnackBar (assuming user can see logs or we add import).
-                                  // Wait, I can't easily add import in this block. 
-                                  // I'll just show it in an AlertDialog.
-                                  Navigator.pop(context);
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) => AlertDialog(
-                                      title: const Text('FCM Token'),
-                                      content: SelectableText(token),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () => Navigator.pop(context),
-                                          child: const Text('Close'),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                } else {
-                                  Navigator.pop(context);
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(content: Text('Could not get FCM Token')),
-                                  );
-                                }
-                              }
-                            },
-                            child: const Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text('View FCM Token'),
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
+
               const Divider(),
               ListTile(
                 leading: const Icon(Icons.delete_forever, color: Colors.red),

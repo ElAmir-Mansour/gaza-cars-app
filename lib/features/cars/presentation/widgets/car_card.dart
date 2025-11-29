@@ -6,6 +6,7 @@ import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../auth/presentation/bloc/auth_state.dart';
 import '../../domain/entities/car_entity.dart';
 import '../bloc/favorites_bloc.dart';
+import '../../../../shared/widgets/cached_image.dart';
 
 class CarCard extends StatelessWidget {
   final CarEntity car;
@@ -44,14 +45,9 @@ class CarCard extends StatelessWidget {
                   child: AspectRatio(
                     aspectRatio: 16 / 10,
                     child: car.images.isNotEmpty
-                        ? Image.network(
-                            car.images.first,
+                        ? CachedImage(
+                            imageUrl: car.images.first,
                             fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) =>
-                                Container(
-                                  color: Colors.grey[100],
-                                  child: const Center(child: Icon(Icons.error, color: Colors.grey)),
-                                ),
                           )
                         : Container(
                             color: Colors.grey[100],
