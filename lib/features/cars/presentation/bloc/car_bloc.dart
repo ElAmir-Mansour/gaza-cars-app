@@ -33,6 +33,7 @@ class CarBloc extends Bloc<CarEvent, CarState> {
     on<UploadCarImagesEvent>(_onUploadCarImages);
     on<FilterCarsEvent>(_onFilterCars);
     on<ApplyFiltersEvent>(_onApplyFilters);
+    on<LoadMoreCarsEvent>(_onLoadMoreCars);
   }
 
   Future<void> _onGetCars(GetCarsEvent event, Emitter<CarState> emit) async {
