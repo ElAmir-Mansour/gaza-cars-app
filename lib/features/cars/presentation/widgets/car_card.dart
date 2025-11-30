@@ -45,9 +45,12 @@ class CarCard extends StatelessWidget {
                   child: AspectRatio(
                     aspectRatio: 16 / 10,
                     child: car.images.isNotEmpty
-                        ? CachedImage(
-                            imageUrl: car.images.first,
-                            fit: BoxFit.cover,
+                        ? Hero(
+                            tag: 'car_image_${car.id}',
+                            child: CachedImage(
+                              imageUrl: car.images.first,
+                              fit: BoxFit.cover,
+                            ),
                           )
                         : Container(
                             color: Colors.grey[100],

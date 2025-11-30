@@ -44,7 +44,7 @@ class ChatListPage extends StatelessWidget {
                 return EmptyStateWidget(
                   icon: Icons.chat_bubble_outline,
                   title: AppLocalizations.of(context)!.noMessagesYet,
-                  subtitle: 'Start a conversation with a seller!',
+                  message: 'Start a conversation with a seller!',
                 );
               }
               return ListView.builder(
@@ -80,7 +80,7 @@ class ChatListPage extends StatelessWidget {
               return EmptyStateWidget(
                 icon: Icons.error_outline,
                 title: 'Error',
-                subtitle: state.message,
+                message: state.message,
               );
             }
             return const SizedBox.shrink();

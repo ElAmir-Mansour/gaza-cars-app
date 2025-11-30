@@ -95,6 +95,7 @@ import '../../features/chat/presentation/bloc/message_bloc.dart' as _i239;
 import '../../features/profile/presentation/bloc/profile_bloc.dart' as _i469;
 import '../../features/settings/presentation/bloc/language_cubit.dart' as _i771;
 import '../services/notification_service.dart' as _i941;
+import '../services/rate_app_service.dart' as _i58;
 import 'register_module.dart' as _i291;
 
 extension GetItInjectableX on _i174.GetIt {
@@ -218,10 +219,21 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i951.FavoritesBloc(
         getFavoritesUseCase: gh<_i223.GetFavoritesUseCase>(),
         toggleFavoriteUseCase: gh<_i29.ToggleFavoriteUseCase>(),
+        rateAppService: gh<_i58.RateAppService>(),
       ),
     );
     gh.factory<_i154.ReportCubit>(
       () => _i154.ReportCubit(gh<_i307.SubmitReportUseCase>()),
+    );
+    gh.factory<_i539.CarBloc>(
+      () => _i539.CarBloc(
+        gh<_i172.GetCarsUseCase>(),
+        gh<_i681.AddCarUseCase>(),
+        gh<_i427.UpdateCarUseCase>(),
+        gh<_i433.DeleteCarUseCase>(),
+        gh<_i975.UploadCarImagesUseCase>(),
+        gh<_i58.RateAppService>(),
+      ),
     );
     gh.factory<_i732.CarModerationBloc>(
       () => _i732.CarModerationBloc(
@@ -259,15 +271,6 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i469.ProfileBloc>(
       () => _i469.ProfileBloc(gh<_i787.AuthRepository>()),
-    );
-    gh.factory<_i539.CarBloc>(
-      () => _i539.CarBloc(
-        gh<_i172.GetCarsUseCase>(),
-        gh<_i681.AddCarUseCase>(),
-        gh<_i427.UpdateCarUseCase>(),
-        gh<_i433.DeleteCarUseCase>(),
-        gh<_i975.UploadCarImagesUseCase>(),
-      ),
     );
     gh.factory<_i194.AdminStatsBloc>(
       () => _i194.AdminStatsBloc(

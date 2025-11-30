@@ -1,59 +1,63 @@
 import 'package:flutter/material.dart';
 
 class EmptyStateWidget extends StatelessWidget {
-  final IconData icon;
   final String title;
-  final String? subtitle;
-  final VoidCallback? onRetry;
-  final String? retryText;
+  final String message;
+  final IconData icon;
+  final VoidCallback? onAction;
+  final String? actionLabel;
 
   const EmptyStateWidget({
     super.key,
-    required this.icon,
     required this.title,
-    this.subtitle,
-    this.onRetry,
-    this.retryText,
+    required this.message,
+    this.icon = Icons.search_off,
+    this.onAction,
+    this.actionLabel,
   });
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(24.0),
+        padding: const EdgeInsets.all(32.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              icon,
-              size: 80,
-              color: Colors.grey[400],
+            Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.3),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                icon,
+                size: 64,
+                color: Theme.of(context).colorScheme.primary,
+              ),
             ),
             const SizedBox(height: 24),
             Text(
               title,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    color: Colors.grey[700],
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
               textAlign: TextAlign.center,
             ),
-            if (subtitle != null) ...[
-              const SizedBox(height: 8),
-              Text(
-                subtitle!,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.grey[600],
-                    ),
-                textAlign: TextAlign.center,
-              ),
-            ],
-            if (onRetry != null) ...[
+            const SizedBox(height: 8),
+            Text(
+              message,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
+                  ),
+              textAlign: TextAlign.center,
+            ),
+            if (onAction != null && actionLabel != null) ...[
               const SizedBox(height: 32),
               FilledButton.icon(
-                onPressed: onRetry,
+                onPressed: onAction,
                 icon: const Icon(Icons.refresh),
-                label: Text(retryText ?? 'Retry'),
+                label: Text(actionLabel!),
               ),
             ],
           ],

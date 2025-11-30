@@ -42,7 +42,7 @@ class MyListingsPage extends StatelessWidget {
                     return const EmptyStateWidget(
                       icon: Icons.format_list_bulleted,
                       title: 'No listings yet',
-                      subtitle: 'Start selling by adding your first car!',
+                      message: 'Start selling by adding your first car!',
                     );
                   }
 
@@ -90,7 +90,7 @@ class MyListingsPage extends StatelessWidget {
                   return EmptyStateWidget(
                     icon: Icons.error_outline,
                     title: 'Error',
-                    subtitle: state.message,
+                    message: state.message,
                   );
                 }
                 return const SizedBox.shrink();

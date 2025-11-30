@@ -7,6 +7,7 @@ import '../../domain/usecases/delete_car_usecase.dart';
 import '../../domain/usecases/get_cars_usecase.dart';
 import '../../domain/usecases/update_car_usecase.dart';
 import '../../domain/usecases/upload_car_images_usecase.dart';
+import '../../../../core/services/rate_app_service.dart';
 import '../../../../core/error/failures.dart';
 import 'car_event.dart';
 import 'car_state.dart';
@@ -18,6 +19,7 @@ class CarBloc extends Bloc<CarEvent, CarState> {
   final UpdateCarUseCase updateCarUseCase;
   final DeleteCarUseCase deleteCarUseCase;
   final UploadCarImagesUseCase uploadCarImagesUseCase;
+  final RateAppService rateAppService;
 
   CarBloc(
     this.getCarsUseCase,
@@ -25,6 +27,7 @@ class CarBloc extends Bloc<CarEvent, CarState> {
     this.updateCarUseCase,
     this.deleteCarUseCase,
     this.uploadCarImagesUseCase,
+    this.rateAppService,
   ) : super(CarInitial()) {
     on<GetCarsEvent>(_onGetCars);
     on<AddCarEvent>(_onAddCar);
@@ -143,7 +146,10 @@ class CarBloc extends Bloc<CarEvent, CarState> {
     final result = await addCarUseCase(event.car);
     result.fold(
       (failure) => emit(CarError(failure.message)),
-      (_) => add(const GetCarsEvent()), 
+      (_) {
+        add(const GetCarsEvent());
+        rateAppService.trackEvent();
+      }, 
     );
   }
 

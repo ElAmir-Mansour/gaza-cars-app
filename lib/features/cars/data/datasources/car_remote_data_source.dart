@@ -53,22 +53,7 @@ class CarRemoteDataSourceImpl implements CarRemoteDataSource {
     try {
       Query collectionReference = firestore.collection('cars');
 
-      // Apply filters
-      if (condition != null && condition.isNotEmpty) {
-        collectionReference = collectionReference.where('condition', isEqualTo: condition);
-      }
-      if (location != null && location.isNotEmpty) {
-        collectionReference = collectionReference.where('location', isEqualTo: location);
-      }
-      if (transmission != null && transmission.isNotEmpty) {
-        collectionReference = collectionReference.where('transmission', isEqualTo: transmission);
-      }
-      if (fuelType != null && fuelType.isNotEmpty) {
-        collectionReference = collectionReference.where('fuelType', isEqualTo: fuelType);
-      }
-      if (make != null && make.isNotEmpty) {
-        collectionReference = collectionReference.where('make', isEqualTo: make);
-      }
+      // Server-side filtering for numeric/range fields (efficient and easier to index)
       if (year != null) {
         collectionReference = collectionReference.where('year', isEqualTo: year);
       }
@@ -86,7 +71,9 @@ class CarRemoteDataSourceImpl implements CarRemoteDataSource {
         collectionReference = collectionReference.orderBy('createdAt', descending: true);
       }
 
-      collectionReference = collectionReference.limit(10);
+      // Fetch a larger batch to allow for client-side filtering
+      // This avoids the need for exponential composite indexes in Firestore
+      collectionReference = collectionReference.limit(50);
 
       if (startAfterValues != null && startAfterValues.isNotEmpty) {
         collectionReference = collectionReference.startAfter(startAfterValues);
@@ -96,22 +83,42 @@ class CarRemoteDataSourceImpl implements CarRemoteDataSource {
       
       var cars = snapshot.docs.map((doc) => _carFromSnapshot(doc)).toList();
 
-      // Client-side text search (since Firestore doesn't support it well)
-      if (query != null && query.isNotEmpty) {
-        final lowerQuery = query.toLowerCase();
-        cars = cars.where((car) {
-          return car.make.toLowerCase().contains(lowerQuery) ||
-                 car.model.toLowerCase().contains(lowerQuery) ||
-                 car.year.toString().contains(lowerQuery);
-        }).toList();
-      }
+      // Client-side filtering for string fields (handles case-insensitivity and avoids index explosion)
+      cars = cars.where((car) {
+        bool matches = true;
+
+        if (condition != null && condition.isNotEmpty) {
+          matches = matches && car.condition.toLowerCase() == condition.toLowerCase();
+        }
+        if (location != null && location.isNotEmpty) {
+          matches = matches && car.location.toLowerCase() == location.toLowerCase();
+        }
+        if (transmission != null && transmission.isNotEmpty) {
+          matches = matches && car.transmission.toLowerCase() == transmission.toLowerCase();
+        }
+        if (fuelType != null && fuelType.isNotEmpty) {
+          matches = matches && car.fuelType.toLowerCase() == fuelType.toLowerCase();
+        }
+        if (make != null && make.isNotEmpty) {
+          matches = matches && car.make.toLowerCase() == make.toLowerCase();
+        }
+        if (query != null && query.isNotEmpty) {
+          final lowerQuery = query.toLowerCase();
+          matches = matches && (
+            car.make.toLowerCase().contains(lowerQuery) ||
+            car.model.toLowerCase().contains(lowerQuery) ||
+            car.year.toString().contains(lowerQuery)
+          );
+        }
+
+        return matches;
+      }).toList();
 
       return cars;
     } catch (e) {
       debugPrint('🚗 Error fetching cars: $e');
       if (e is FirebaseException && e.code == 'failed-precondition') {
         debugPrint('⚠️ MISSING INDEX: The query requires an index. Check the console output above or below for a URL to create it.');
-        debugPrint('🔗 You can also deploy the firestore.indexes.json file included in the project.');
       }
       throw const ServerFailure('Failed to fetch cars. Check logs for missing indexes.');
     }

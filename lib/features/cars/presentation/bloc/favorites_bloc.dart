@@ -4,6 +4,7 @@ import 'package:injectable/injectable.dart';
 import '../../domain/entities/car_entity.dart';
 import '../../domain/usecases/get_favorites_usecase.dart';
 import '../../domain/usecases/toggle_favorite_usecase.dart';
+import '../../../../core/services/rate_app_service.dart';
 
 part 'favorites_event.dart';
 part 'favorites_state.dart';
@@ -12,10 +13,12 @@ part 'favorites_state.dart';
 class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
   final GetFavoritesUseCase getFavoritesUseCase;
   final ToggleFavoriteUseCase toggleFavoriteUseCase;
+  final RateAppService rateAppService;
 
   FavoritesBloc({
     required this.getFavoritesUseCase,
     required this.toggleFavoriteUseCase,
+    required this.rateAppService,
   }) : super(FavoritesInitial()) {
     on<LoadFavoritesEvent>(_onLoadFavorites);
     on<ToggleFavoriteEvent>(_onToggleFavorite);
@@ -49,6 +52,7 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
       (_) {
         // After toggling, reload the favorites list to ensure consistency
         add(LoadFavoritesEvent(userId: event.userId));
+        rateAppService.trackEvent();
       },
     );
   }

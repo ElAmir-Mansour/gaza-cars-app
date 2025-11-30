@@ -135,7 +135,7 @@ class HomePage extends StatelessWidget {
                 headerSliverBuilder: (context, innerBoxIsScrolled) {
                   return [
                     SliverAppBar(
-                      expandedHeight: 120.0,
+                      expandedHeight: 140.0,
                       floating: true,
                       pinned: true,
                       elevation: 0,
@@ -173,7 +173,7 @@ class HomePage extends StatelessWidget {
 
                       ],
                       bottom: PreferredSize(
-                        preferredSize: const Size.fromHeight(60),
+                        preferredSize: const Size.fromHeight(70),
                         child: Container(
                           padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
                           child: Container(
@@ -212,15 +212,15 @@ class HomePage extends StatelessWidget {
                     } else if (state is CarLoaded) {
                       final displayCars = state.filteredCars;
 
-                      if (displayCars.isEmpty) {
+                      if (state.cars.isEmpty) {
                         return EmptyStateWidget(
-                          icon: Icons.directions_car_outlined,
                           title: l10n.noCarsFound,
-                          subtitle: l10n.adjustFiltersHint,
-                          onRetry: () {
+                          message: 'Try adjusting your filters or search for something else.',
+                          icon: Icons.no_crash,
+                          onAction: () {
                             context.read<CarBloc>().add(const GetCarsEvent());
                           },
-                          retryText: l10n.retry,
+                          actionLabel: 'Refresh',
                         );
                       }
                       return RefreshIndicator(
@@ -230,15 +230,7 @@ class HomePage extends StatelessWidget {
                         child: _CarList(cars: displayCars, hasReachedMax: state.hasReachedMax),
                       );
                     } else if (state is CarError) {
-                      return EmptyStateWidget(
-                        icon: Icons.error_outline,
-                        title: l10n.error,
-                        subtitle: state.message,
-                        onRetry: () {
-                          context.read<CarBloc>().add(const GetCarsEvent());
-                        },
-                        retryText: l10n.retry,
-                      );
+                      return Center(child: Text(state.message));
                     }
                     return const SizedBox.shrink();
                   },

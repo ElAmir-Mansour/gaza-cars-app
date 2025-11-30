@@ -40,14 +40,14 @@ class FavoritesPage extends StatelessWidget {
               return EmptyStateWidget(
                 icon: Icons.error_outline,
                 title: l10n.error,
-                subtitle: state.message,
+                message: state.message,
               );
             } else if (state is FavoritesLoaded) {
               if (state.favorites.isEmpty) {
                 return EmptyStateWidget(
                   icon: Icons.favorite_border,
                   title: l10n.noFavorites,
-                  subtitle: 'Save cars you like to find them easily later.',
+                  message: 'Save cars you like to find them easily later.',
                 );
               }
               return ListView.builder(

@@ -124,12 +124,22 @@ class CarDetailsPage extends StatelessWidget {
                             enlargeCenterPage: false,
                             autoPlay: car.images.length > 1,
                           ),
-                          items: car.images.map((imageUrl) {
-                            return CachedImage(
+                          items: car.images.asMap().entries.map((entry) {
+                            final index = entry.key;
+                            final imageUrl = entry.value;
+                            final imageWidget = CachedImage(
                               imageUrl: imageUrl,
                               fit: BoxFit.cover,
                               width: double.infinity,
                             );
+
+                            if (index == 0) {
+                              return Hero(
+                                tag: 'car_image_${car.id}',
+                                child: imageWidget,
+                              );
+                            }
+                            return imageWidget;
                           }).toList(),
                         )
                       : Container(
